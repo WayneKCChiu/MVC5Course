@@ -6,25 +6,28 @@ using System.Web.Mvc;
 
 namespace MVC5Course.Controllers
 {
-    public class HomeController : Controller
-    {
-        public ActionResult Index()
-        {
-            return View();
-        }
+   public class HomeController: Controller
+   {
+      public ActionResult Index() {
+         return View();
+      }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+      public ActionResult About() {
+         ViewBag.Message = "Your application description page.";
 
-            return View(); //TODO: About()
-        }
+         return View(); //TODO: About()
+      }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+      public ActionResult Contact() {
+         ViewBag.Message = "Your contact page.";
 
-            return View();
-        }
-    }
+         return View();
+      }
+
+      public ActionResult Test() {
+         ViewBag.Message = "Test";
+
+         return View();
+      }
+   }
 }
