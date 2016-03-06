@@ -1,5 +1,6 @@
 ﻿using MVC5Course.Models;
 using System.Web.Mvc;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace MVC5Course.Controllers
 
       FabricsEntities db = new FabricsEntities();
 
-      public ActionResult Index() {
+      public ActionResult Index(bool? IsActive, string Keyword) {
 
          //var product = new Product() {
          //   ProductName = "BMV",
@@ -26,11 +27,21 @@ namespace MVC5Course.Controllers
 
          //var data = db.Products.Where(p => p.ProductId == pkey).ToList();
 
-         var data = db.Products.OrderByDescending(p => p.ProductId).Take(10);
+         var data = db.Products.OrderByDescending(p => p.ProductId).AsQueryable();
 
-         foreach (var item in data) {
-            item.Price = item.Price + 1;
+         if (IsActive.HasValue) {
+            data = data.Where(a => a.Active.HasValue ? a.Active.Value == IsActive : false);
          }
+
+         if (!String.IsNullOrEmpty(Keyword)) {
+            data = data.Where(a => a.ProductName.Contains(Keyword));
+         }
+
+         //var data = db.Products.Where(a => a.Active.HasValue ? a.Active.Value == IsActive : false).OrderByDescending(p => p.ProductId).Take(10);
+
+         //foreach (var item in data) {
+         //   item.Price = item.Price + 1;
+         //}
 
          SaveChanges();
 
@@ -54,11 +65,23 @@ namespace MVC5Course.Controllers
          return RedirectToAction("Index");
       }
 
+      public ActionResult QueryPlan(int num = 10) {
+
+         var data = db.Products.Include(t => t.OrderLines).OrderBy(p => p.ProductId).AsQueryable();
+
+         //var data = db.Products.Include(t => t.OrderLines).Where(o => o.OrderLines.Count() < num).OrderBy(p => p.ProductId).AsQueryable();
+
+         //var data = db.Database.SqlQuery<Product>(@"
+         //     SELECT *
+         //     FROM dbo.Product p
+         //     WHERE p.ProductId < @p0", num);
+
+         return View(data);
+      }
+
       private void SaveChanges() {
          try {
-
             db.SaveChanges();
-
          }
          catch (DbEntityValidationException ex) {
             foreach (DbEntityValidationResult item in ex.EntityValidationErrors) {
