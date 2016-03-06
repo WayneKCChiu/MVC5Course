@@ -21,13 +21,13 @@ namespace MVC5Course.Controllers
          //   Active = true
          //};
 
-         //db.Products.Add(product);
+         //db.Product.Add(product);
 
          //var pkey = product.ProductId;
 
-         //var data = db.Products.Where(p => p.ProductId == pkey).ToList();
+         //var data = db.Product.Where(p => p.ProductId == pkey).ToList();
 
-         var data = db.Products.OrderByDescending(p => p.ProductId).AsQueryable();
+         var data = db.Product.OrderByDescending(p => p.ProductId).AsQueryable();
 
          if (IsActive.HasValue) {
             data = data.Where(a => a.Active.HasValue ? a.Active.Value == IsActive : false);
@@ -37,7 +37,7 @@ namespace MVC5Course.Controllers
             data = data.Where(a => a.ProductName.Contains(Keyword));
          }
 
-         //var data = db.Products.Where(a => a.Active.HasValue ? a.Active.Value == IsActive : false).OrderByDescending(p => p.ProductId).Take(10);
+         //var data = db.Product.Where(a => a.Active.HasValue ? a.Active.Value == IsActive : false).OrderByDescending(p => p.ProductId).Take(10);
 
          //foreach (var item in data) {
          //   item.Price = item.Price + 1;
@@ -50,16 +50,16 @@ namespace MVC5Course.Controllers
 
       public ActionResult Detail(int Id) {
 
-         var data = db.Products.FirstOrDefault(p => p.ProductId == Id);
+         var data = db.Product.FirstOrDefault(p => p.ProductId == Id);
 
          return View(data);
       }
 
       public ActionResult Delete(int id) {
-         var item = db.Products.Find(id);
+         var item = db.Product.Find(id);
 
-         db.OrderLines.RemoveRange(item.OrderLines);
-         db.Products.Remove(item);
+         db.OrderLine.RemoveRange(item.OrderLine);
+         db.Product.Remove(item);
          db.SaveChanges();
 
          return RedirectToAction("Index");
@@ -67,9 +67,9 @@ namespace MVC5Course.Controllers
 
       public ActionResult QueryPlan(int num = 10) {
 
-         var data = db.Products.Include(t => t.OrderLines).OrderBy(p => p.ProductId).AsQueryable();
+         var data = db.Product.Include(t => t.OrderLine).OrderBy(p => p.ProductId).AsQueryable();
 
-         //var data = db.Products.Include(t => t.OrderLines).Where(o => o.OrderLines.Count() < num).OrderBy(p => p.ProductId).AsQueryable();
+         //var data = db.Product.Include(t => t.OrderLine).Where(o => o.OrderLine.Count() < num).OrderBy(p => p.ProductId).AsQueryable();
 
          //var data = db.Database.SqlQuery<Product>(@"
          //     SELECT *

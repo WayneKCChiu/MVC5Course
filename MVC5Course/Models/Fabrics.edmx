@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="FabricsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="FabricsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Client">
           <Key>
             <PropertyRef Name="ClientId" />
@@ -126,10 +126,6 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="usp_Fabrics" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="CreateClients" Type="int" Mode="In" />
-          <Parameter Name="CreateOrders" Type="int" Mode="In" />
-        </Function>
         <EntityContainer Name="FabricsModelStoreContainer">
           <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Occupation" EntityType="Self.Occupation" Schema="dbo" store:Type="Tables" />
@@ -163,7 +159,8 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
             <End Role="OrderLine" EntitySet="OrderLine" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="FabricsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -189,7 +186,7 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
           <Property Name="Latitude" Type="Double" />
           <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Occupation" Relationship="Self.FK_Client_Occupation" FromRole="Client" ToRole="Occupation" />
-          <NavigationProperty Name="Orders" Relationship="Self.fk_Order_ClientId" FromRole="Client" ToRole="Order" />
+          <NavigationProperty Name="Order" Relationship="Self.fk_Order_ClientId" FromRole="Client" ToRole="Order" />
         </EntityType>
         <EntityType Name="Occupation">
           <Key>
@@ -197,7 +194,7 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
           </Key>
           <Property Name="OccupationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OccupationName" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Clients" Relationship="Self.FK_Client_Occupation" FromRole="Occupation" ToRole="Client" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Client_Occupation" FromRole="Occupation" ToRole="Client" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -209,7 +206,7 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
           <Property Name="OrderTotal" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="OrderStatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="Client" Relationship="Self.fk_Order_ClientId" FromRole="Order" ToRole="Client" />
-          <NavigationProperty Name="OrderLines" Relationship="Self.fk_OrderLine_OrderId" FromRole="Order" ToRole="OrderLine" />
+          <NavigationProperty Name="OrderLine" Relationship="Self.fk_OrderLine_OrderId" FromRole="Order" ToRole="OrderLine" />
         </EntityType>
         <EntityType Name="OrderLine">
           <Key>
@@ -233,7 +230,18 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
           <Property Name="Price" Type="Decimal" Precision="10" Scale="4" />
           <Property Name="Active" Type="Boolean" />
           <Property Name="Stock" Type="Decimal" Precision="18" Scale="3" />
-          <NavigationProperty Name="OrderLines" Relationship="Self.fk_OrderLine_ProductId" FromRole="Product" ToRole="OrderLine" />
+          <NavigationProperty Name="OrderLine" Relationship="Self.fk_OrderLine_ProductId" FromRole="Product" ToRole="OrderLine" />
+        </EntityType>
+        <EntityType Name="vwClientOrder">
+          <Key>
+            <PropertyRef Name="clientid" />
+          </Key>
+          <Property Name="clientid" Type="Int32" Nullable="false" />
+          <Property Name="firstname" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="lastname" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="orderdate" Type="DateTime" Precision="3" />
+          <Property Name="ordertotal" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="orderstatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <Association Name="FK_Client_Occupation">
           <End Role="Occupation" Type="Self.Occupation" Multiplicity="0..1" />
@@ -284,55 +292,36 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="FabricsEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Clients" EntityType="Self.Client" />
-          <EntitySet Name="Occupations" EntityType="Self.Occupation" />
-          <EntitySet Name="Orders" EntityType="Self.Order" />
-          <EntitySet Name="OrderLines" EntityType="Self.OrderLine" />
-          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Client" EntityType="Self.Client" />
+          <EntitySet Name="Occupation" EntityType="Self.Occupation" />
+          <EntitySet Name="Order" EntityType="Self.Order" />
+          <EntitySet Name="OrderLine" EntityType="Self.OrderLine" />
+          <EntitySet Name="Product" EntityType="Self.Product" />
+          <EntitySet Name="vwClientOrder" EntityType="Self.vwClientOrder" />
           <AssociationSet Name="FK_Client_Occupation" Association="Self.FK_Client_Occupation">
-            <End Role="Occupation" EntitySet="Occupations" />
-            <End Role="Client" EntitySet="Clients" />
+            <End Role="Occupation" EntitySet="Occupation" />
+            <End Role="Client" EntitySet="Client" />
           </AssociationSet>
           <AssociationSet Name="fk_Order_ClientId" Association="Self.fk_Order_ClientId">
-            <End Role="Client" EntitySet="Clients" />
-            <End Role="Order" EntitySet="Orders" />
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Order" EntitySet="Order" />
           </AssociationSet>
           <AssociationSet Name="fk_OrderLine_OrderId" Association="Self.fk_OrderLine_OrderId">
-            <End Role="Order" EntitySet="Orders" />
-            <End Role="OrderLine" EntitySet="OrderLines" />
+            <End Role="Order" EntitySet="Order" />
+            <End Role="OrderLine" EntitySet="OrderLine" />
           </AssociationSet>
           <AssociationSet Name="fk_OrderLine_ProductId" Association="Self.fk_OrderLine_ProductId">
-            <End Role="Product" EntitySet="Products" />
-            <End Role="OrderLine" EntitySet="OrderLines" />
+            <End Role="Product" EntitySet="Product" />
+            <End Role="OrderLine" EntitySet="OrderLine" />
           </AssociationSet>
-          <EntitySet Name="vwClientOrders" EntityType="FabricsModel.vwClientOrder" />
-          <FunctionImport Name="usp_Fabrics" ReturnType="Collection(FabricsModel.usp_Fabrics_Result)">
-            <Parameter Name="CreateClients" Mode="In" Type="Int32" />
-            <Parameter Name="CreateOrders" Mode="In" Type="Int32" />
-          </FunctionImport>
         </EntityContainer>
-        <EntityType Name="vwClientOrder">
-          <Key>
-            <PropertyRef Name="clientid" />
-          </Key>
-          <Property Name="clientid" Type="Int32" Nullable="false" />
-          <Property Name="firstname" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
-          <Property Name="lastname" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
-          <Property Name="orderdate" Type="DateTime" Precision="3" />
-          <Property Name="ordertotal" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="orderstatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-        </EntityType>
-        <ComplexType Name="usp_Fabrics_Result">
-          <Property Type="String" Name="Table" Nullable="false" MaxLength="10" />
-          <Property Type="Int32" Name="Count" Nullable="true" />
-        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="FabricsModelStoreContainer" CdmEntityContainer="FabricsEntities">
-          <EntitySetMapping Name="Clients">
+          <EntitySetMapping Name="Client">
             <EntityTypeMapping TypeName="FabricsModel.Client">
               <MappingFragment StoreEntitySet="Client">
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
@@ -355,7 +344,7 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Occupations">
+          <EntitySetMapping Name="Occupation">
             <EntityTypeMapping TypeName="FabricsModel.Occupation">
               <MappingFragment StoreEntitySet="Occupation">
                 <ScalarProperty Name="OccupationId" ColumnName="OccupationId" />
@@ -363,7 +352,7 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Orders">
+          <EntitySetMapping Name="Order">
             <EntityTypeMapping TypeName="FabricsModel.Order">
               <MappingFragment StoreEntitySet="Order">
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
@@ -374,7 +363,7 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="OrderLines">
+          <EntitySetMapping Name="OrderLine">
             <EntityTypeMapping TypeName="FabricsModel.OrderLine">
               <MappingFragment StoreEntitySet="OrderLine">
                 <ScalarProperty Name="OrderId" ColumnName="OrderId" />
@@ -385,7 +374,7 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Products">
+          <EntitySetMapping Name="Product">
             <EntityTypeMapping TypeName="FabricsModel.Product">
               <MappingFragment StoreEntitySet="Product">
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
@@ -396,26 +385,18 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="vwClientOrders">
+          <EntitySetMapping Name="vwClientOrder">
             <EntityTypeMapping TypeName="FabricsModel.vwClientOrder">
               <MappingFragment StoreEntitySet="vwClientOrder">
-                <ScalarProperty Name="orderstatus" ColumnName="orderstatus" />
-                <ScalarProperty Name="ordertotal" ColumnName="ordertotal" />
-                <ScalarProperty Name="orderdate" ColumnName="orderdate" />
-                <ScalarProperty Name="lastname" ColumnName="lastname" />
-                <ScalarProperty Name="firstname" ColumnName="firstname" />
                 <ScalarProperty Name="clientid" ColumnName="clientid" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="orderdate" ColumnName="orderdate" />
+                <ScalarProperty Name="ordertotal" ColumnName="ordertotal" />
+                <ScalarProperty Name="orderstatus" ColumnName="orderstatus" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="usp_Fabrics" FunctionName="FabricsModel.Store.usp_Fabrics">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="FabricsModel.usp_Fabrics_Result">
-                <ScalarProperty Name="Table" ColumnName="Table" />
-                <ScalarProperty Name="Count" ColumnName="Count" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -430,7 +411,7 @@ warning 6002: The table/view 'F:\MVC5_PRACTICE\MVC5COURSE\APP_DATA\FABRICS.MDF.d
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />

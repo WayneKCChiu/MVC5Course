@@ -21,6 +21,6 @@ namespace MVC5Course.Models
         public string OrderStatus { get; set; }
     
         public virtual Client Client { get; set; }
-        public virtual ICollection<OrderLine> OrderLines { get; set; }
+        public virtual ICollection<OrderLine> OrderLine { get; set; }
     }
 }

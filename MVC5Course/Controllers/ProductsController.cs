@@ -10,24 +10,24 @@ using MVC5Course.Models;
 
 namespace MVC5Course.Controllers
 {
-    public class ProductsController : Controller
+    public class ProductController : Controller
     {
         private FabricsEntities db = new FabricsEntities();
 
-        // GET: Products
+        // GET: Product
         public ActionResult Index()
         {
-            return View(db.Products.ToList());
+            return View(db.Product.ToList());
         }
 
-        // GET: Products/Details/5
+        // GET: Product/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Product product = db.Product.Find(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -35,13 +35,13 @@ namespace MVC5Course.Controllers
             return View(product);
         }
 
-        // GET: Products/Create
+        // GET: Product/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Products/Create
+        // POST: Product/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -50,7 +50,7 @@ namespace MVC5Course.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Products.Add(product);
+                db.Product.Add(product);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -58,14 +58,14 @@ namespace MVC5Course.Controllers
             return View(product);
         }
 
-        // GET: Products/Edit/5
+        // GET: Product/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Product product = db.Product.Find(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -73,7 +73,7 @@ namespace MVC5Course.Controllers
             return View(product);
         }
 
-        // POST: Products/Edit/5
+        // POST: Product/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -89,14 +89,14 @@ namespace MVC5Course.Controllers
             return View(product);
         }
 
-        // GET: Products/Delete/5
+        // GET: Product/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = db.Products.Find(id);
+            Product product = db.Product.Find(id);
             if (product == null)
             {
                 return HttpNotFound();
@@ -104,13 +104,13 @@ namespace MVC5Course.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
+        // POST: Product/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product product = db.Products.Find(id);
-            db.Products.Remove(product);
+            Product product = db.Product.Find(id);
+            db.Product.Remove(product);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

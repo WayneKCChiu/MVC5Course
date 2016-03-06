@@ -17,13 +17,13 @@ namespace MVC5Course.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Occupation()
         {
-            this.Clients = new HashSet<Client>();
+            this.Client = new HashSet<Client>();
         }
     
         public int OccupationId { get; set; }
         public string OccupationName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Client> Clients { get; set; }
+        public virtual ICollection<Client> Client { get; set; }
     }
 }
