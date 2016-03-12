@@ -37,13 +37,15 @@
                @Html.DisplayFor(modelItem => products[i].ProductName)
             </td>
             <td>
-               @Html.EditorFor(modelItem => products[i].Price)
+               @Html.EditorFor(modelItem => products[i].Price)<br />
+               @Html.ValidationMessageFor(modelItem => products[i].Price)
             </td>
             @*<td>
                    @Html.DisplayFor(modelItem => item.Active)
                </td>*@
             <td>
-               @Html.EditorFor(modelItem => products[i].Stock)
+               @Html.EditorFor(modelItem => products[i].Stock)<br />
+               @Html.ValidationMessageFor(modelItem => products[i].Stock)
             </td>
             <td>
                @Html.ActionLink("Edit", "Edit", new { id = products[i].ProductId }) |

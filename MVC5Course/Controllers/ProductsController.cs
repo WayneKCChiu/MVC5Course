@@ -17,16 +17,20 @@ namespace MVC5Course.Controllers
       }
 
       [HttpPost]
-      public ActionResult Index(Product[] products) {
-         foreach (var item in products) {
-            var product = repo.Find(item.ProductId);
-            product.Stock = item.Stock;
-            product.Price = item.Price;
+      public ActionResult Index(IList<Product批次更新ViewModel> products) {
+         if (ModelState.IsValid) {
+            foreach (var item in products) {
+               var product = repo.Find(item.ProductId);
+               product.Stock = item.Stock;
+               product.Price = item.Price;
+            }
+
+            repo.UnitOfWork.Commit();
+            return RedirectToAction("Index");
          }
 
-         repo.UnitOfWork.Commit();
+         return View(repo.All().Take(5));
 
-         return RedirectToAction("Index");
       }
 
       // GET: Product/Details/5
