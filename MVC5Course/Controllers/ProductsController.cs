@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Data.Entity;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using MVC5Course.Models;
 
 namespace MVC5Course.Controllers
 {
-   public class ProductController: Controller
+   public class ProductsController: Controller
    {
-      //private FabricsEntities db = new FabricsEntities();
-
       ProductRepository repo = RepositoryHelper.GetProductRepository();
       // GET: Product
       public ActionResult Index() {
