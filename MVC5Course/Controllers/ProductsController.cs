@@ -5,9 +5,8 @@ using MVC5Course.Models;
 
 namespace MVC5Course.Controllers
 {
-   public class ProductsController: Controller
+   public class ProductsController: BaseController
    {
-      ProductRepository repo = RepositoryHelper.GetProductRepository();
       // GET: Product
       public ActionResult Index() {
          var data = repo.All();
