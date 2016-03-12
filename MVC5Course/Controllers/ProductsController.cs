@@ -2,6 +2,9 @@
 using System.Net;
 using System.Web.Mvc;
 using MVC5Course.Models;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace MVC5Course.Controllers
 {
@@ -9,8 +12,21 @@ namespace MVC5Course.Controllers
    {
       // GET: Product
       public ActionResult Index() {
-         var data = repo.All();
+         var data = repo.All().Take(5);
          return View(data);
+      }
+
+      [HttpPost]
+      public ActionResult Index(Product[] products) {
+         foreach (var item in products) {
+            var product = repo.Find(item.ProductId);
+            product.Stock = item.Stock;
+            product.Price = item.Price;
+         }
+
+         repo.UnitOfWork.Commit();
+
+         return RedirectToAction("Index");
       }
 
       // GET: Product/Details/5

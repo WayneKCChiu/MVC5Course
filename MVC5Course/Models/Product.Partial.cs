@@ -14,7 +14,6 @@ namespace MVC5Course.Models
       [Required]
       public int ProductId { get; set; }
       [Required]
-      [必須其中一個是空白]
       [StringLength(80, ErrorMessage = "欄位長度不得大於 80 個字元")]
       public string ProductName { get; set; }
       [Required]
