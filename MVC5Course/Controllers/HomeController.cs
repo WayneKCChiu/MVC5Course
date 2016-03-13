@@ -32,7 +32,6 @@ namespace MVC5Course.Controllers
          return View();
       }
 
-
       [HandleError(ExceptionType = typeof(ArgumentException), View = "ErrorArgument")]
       [HandleError(ExceptionType = typeof(SqlException), View = "ErrorSql")]
       public ActionResult ErrorTest(string errorType) {
@@ -45,6 +44,12 @@ namespace MVC5Course.Controllers
          }
 
          return Content("NO ERROR");
+      }
+
+      public ActionResult RazorTest() {
+         int[] data = new int[] { 1, 2, 3, 4, 5 };
+
+         return PartialView(data);
       }
    }
 }
