@@ -85,10 +85,7 @@ namespace MVC5Course.Controllers
       // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public ActionResult Edit(int id, FormCollection data) {
-
-         var product = repo.Find(id);
-         //[Bind(Include = "ProductId,ProductName,Price,Active,Stock")] Product product
+      public ActionResult Edit(int id, FormCollection a) {
          //if (ModelState.IsValid) {
          //   var db = (FabricsEntities)repo.UnitOfWork.Context; // 轉型
          //   db.Entry(product).State = EntityState.Modified;
@@ -96,6 +93,8 @@ namespace MVC5Course.Controllers
          //   return RedirectToAction("Index");
          //}
 
+         var product = repo.Find(id);
+         
          if (TryUpdateModel<Product>(product, new string[] { "ProductId,ProductName,Price,Active,Stock" })) {
             repo.UnitOfWork.Commit();
 

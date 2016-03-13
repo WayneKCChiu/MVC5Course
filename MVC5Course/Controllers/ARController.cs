@@ -1,4 +1,5 @@
-﻿using MVC5Course.Models;
+﻿using Microsoft.Web.Mvc;
+using MVC5Course.Models;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,7 @@ namespace MVC5Course.Controllers
          return File(Server.MapPath("~/Content/imgres.png"), "image/png");
       }
 
+      [AjaxOnly]
       public ActionResult JsonTest() {
          var db = new FabricsEntities();
 
