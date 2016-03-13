@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -29,6 +30,21 @@ namespace MVC5Course.Controllers
          ViewBag.Message = "Test";
 
          return View();
+      }
+
+
+      [HandleError(ExceptionType = typeof(ArgumentException), View = "ErrorArgument")]
+      [HandleError(ExceptionType = typeof(SqlException), View = "ErrorSql")]
+      public ActionResult ErrorTest(string errorType) {
+         if (errorType == "1") {
+            throw new Exception("Error1");
+         }
+         if (errorType == "2") {
+            throw new ArgumentException("Error2");
+
+         }
+
+         return Content("NO ERROR");
       }
    }
 }
