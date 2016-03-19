@@ -1,62 +1,66 @@
 ﻿@model IEnumerable<MVC5Course.Models.Client>
 
 @{
-    ViewBag.Title = "Index";
+   ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+  @* @Html.ActionLink("Create New", "Create")*@
+
+   @Ajax.ActionLink("Create New", "Create", new AjaxOptions {UpdateTargetId = "Detail"})
 </p>
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MiddleName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Gender)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreditRating)
-        </th>
-    </tr>
+   <tr>
+      <th>
+         @Html.DisplayNameFor(model => model.FirstName)
+      </th>
+      <th>
+         @Html.DisplayNameFor(model => model.MiddleName)
+      </th>
+      <th>
+         @Html.DisplayNameFor(model => model.LastName)
+      </th>
+      <th>
+         @Html.DisplayNameFor(model => model.Gender)
+      </th>
+      <th>
+         @Html.DisplayNameFor(model => model.DateOfBirth)
+      </th>
+      <th>
+         @Html.DisplayNameFor(model => model.CreditRating)
+      </th>
+   </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
+   @foreach (var item in Model) {
+      <tr>
+         <td>
             @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
+         </td>
+         <td>
             @Html.DisplayFor(modelItem => item.MiddleName)
-        </td>
-        <td>
+         </td>
+         <td>
             @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
+         </td>
+         <td>
             @Html.DisplayFor(modelItem => item.Gender)
-        </td>
-        <td>
+         </td>
+         <td>
             @Html.DisplayFor(modelItem => item.DateOfBirth)
-        </td>
-        <td>
+         </td>
+         <td>
             @Html.DisplayFor(modelItem => item.CreditRating)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ClientId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ClientId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ClientId })
-        </td>
-    </tr>
-}
+         </td>
+         <td>
+            @Ajax.ActionLink("Edit", "Edit", new { id = item.ClientId }, new AjaxOptions { UpdateTargetId = "Detail" }) |
+            @Ajax.ActionLink("Details", "Details", new { id = item.ClientId }, new AjaxOptions { UpdateTargetId = "Detail" }) |
+            @Ajax.ActionLink("Delete", "Delete", new { id = item.ClientId }, new AjaxOptions { UpdateTargetId = "Detail" })
+         </td>
+      </tr>
+   }
 
 </table>
+
+<div id="Detail"></div>

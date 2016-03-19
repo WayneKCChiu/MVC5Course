@@ -14,7 +14,7 @@ namespace MVC5Course.Controllers
         public ActionResult Index()
         {
             var client = db.Client.Include(c => c.Occupation);
-            return View(client.ToList());
+            return View(client.ToList().Take(5));
         }
 
         // GET: Clients/Details/5

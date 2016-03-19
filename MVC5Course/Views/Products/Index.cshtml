@@ -57,7 +57,7 @@
                @Html.ValidationMessageFor(modelItem => products[i].Price)
             </td>
             <td>
-               @Html.DisplayFor(modelItem => products[i].Active)<br />
+               @Html.EditorFor(modelItem => products[i].Active)<br />
             </td>
             <td>
                @Html.EditorFor(modelItem => products[i].Stock)<br />
