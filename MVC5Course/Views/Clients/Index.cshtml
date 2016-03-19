@@ -1,16 +1,28 @@
 ﻿@model IEnumerable<MVC5Course.Models.Client>
 
+@using PagedList
+@using PagedList.Mvc
+
+@{
+   var data = Model as IPagedList;
+}
+
 @{
    ViewBag.Title = "Index";
+
+   var commonAjaxOptions = new AjaxOptions { UpdateTargetId = "Detail", LoadingElementId = "loading", OnSuccess = "ajaxSuccess" };
 }
 
 <h2>Index</h2>
 
 <p>
-  @* @Html.ActionLink("Create New", "Create")*@
+   @* @Html.ActionLink("Create New", "Create")*@
 
-   @Ajax.ActionLink("Create New", "Create", new AjaxOptions {UpdateTargetId = "Detail"})
+   @Ajax.ActionLink("Create New", "Create", commonAjaxOptions)
 </p>
+
+@Html.PagedListPager(list: data, generatePageUrl: p => Url.Action("Index", new { pageNo = p }))
+
 <table class="table">
    <tr>
       <th>
@@ -54,13 +66,15 @@
             @Html.DisplayFor(modelItem => item.CreditRating)
          </td>
          <td>
-            @Ajax.ActionLink("Edit", "Edit", new { id = item.ClientId }, new AjaxOptions { UpdateTargetId = "Detail" }) |
-            @Ajax.ActionLink("Details", "Details", new { id = item.ClientId }, new AjaxOptions { UpdateTargetId = "Detail" }) |
-            @Ajax.ActionLink("Delete", "Delete", new { id = item.ClientId }, new AjaxOptions { UpdateTargetId = "Detail" })
+            @Ajax.ActionLink("Edit", "Edit", new { id = item.ClientId }, commonAjaxOptions) |
+            @Ajax.ActionLink("Details", "Details", new { id = item.ClientId }, commonAjaxOptions) |
+            @Ajax.ActionLink("Delete", "Delete", new { id = item.ClientId }, commonAjaxOptions)
          </td>
       </tr>
    }
 
 </table>
+
+@Html.PagedListPager(list: data, generatePageUrl: p => Url.Action("Index", new { pageNo = p}))
 
 <div id="Detail"></div>
