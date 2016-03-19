@@ -11,9 +11,32 @@ namespace MVC5Course.Controllers
    public class ProductsController: BaseController
    {
       // GET: Product
-      public ActionResult Index() {
-         var data = repo.All().Take(5);
-         return View(data);
+      public ActionResult Index(int? ProductId, string type, bool? isActive, string keyword) {
+         //var data = repo.All().Take(5);
+
+         var data = repo.All(true);
+
+
+         if (isActive.HasValue) {
+            data = data.Where(p => p.Active.HasValue && p.Active == isActive.Value);
+         }
+
+         if(!string.IsNullOrEmpty(keyword)) {
+            data = data.Where(p => p.ProductName.Contains(keyword));
+
+         }
+
+         var item = new List<SelectListItem>();
+         item.Add(new SelectListItem() { Value = "true", Text = "有效" });
+         item.Add(new SelectListItem() { Value = "false", Text = "無效" });
+         ViewData["isActive"] = new SelectList(item, "Value", "Text");
+
+         ViewBag.type = type;
+
+         if (ProductId.HasValue) {
+            ViewBag.SelectProductId = ProductId;
+         }
+         return View(data.Take(5));
       }
 
       [HttpPost]
@@ -94,7 +117,7 @@ namespace MVC5Course.Controllers
          //}
 
          var product = repo.Find(id);
-         
+
          if (TryUpdateModel<Product>(product, new string[] { "ProductId,ProductName,Price,Active,Stock" })) {
             repo.UnitOfWork.Commit();
 

@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-	
+
 namespace MVC5Course.Models
-{   
-	public  class ProductRepository : EFRepository<Product>, IProductRepository
-	{
-     public override IQueryable<Product> All() {
+{
+   public class ProductRepository: EFRepository<Product>, IProductRepository
+   {
+      public override IQueryable<Product> All() {
          return base.All().Where(p => !p.IsDeleted);
       }
 
@@ -14,7 +14,8 @@ namespace MVC5Course.Models
 
          if (isAll) {
             return base.All();
-         }else {
+         }
+         else {
             return this.All();
          }
       }
@@ -22,10 +23,10 @@ namespace MVC5Course.Models
       public Product Find(int id) {
          return this.All().FirstOrDefault(p => p.ProductId == id);
       }
-	}
+   }
 
-	public  interface IProductRepository : IRepository<Product>
-	{
+   public interface IProductRepository: IRepository<Product>
+   {
 
-	}
+   }
 }

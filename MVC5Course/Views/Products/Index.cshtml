@@ -5,14 +5,22 @@
 }
 
 @*@section breadcrumb{
-   <li><a href="#">產品清單</a></li>
-}*@
+      <li><a href="#">產品清單</a></li>
+   }*@
 
 <h2>Index</h2>
 
-<p>
-   @Html.ActionLink("Create New", "Create")
-</p>
+@using (Html.BeginForm("Index", "Products", FormMethod.Get)) {
+
+   <p>
+      @Html.ActionLink("Create New", "Create")
+
+      @*@Html.DropDownList("isActive", "是否有效")*@
+
+      @Html.DropDownList("isActive", null, "是否有效", new { onchange = "this.form.submit();"})
+      @Html.TextBox("keyword", null,"", new { onchange = "this.form.submit();" })
+   </p>
+}
 
 @using (Html.BeginForm()) {
    <table class="table">
@@ -23,9 +31,9 @@
          <th>
             @Html.DisplayNameFor(model => model.Price)
          </th>
-         @*<th>
-                @Html.DisplayNameFor(model => model.Active)
-            </th>*@
+         <th>
+            @Html.DisplayNameFor(model => model.Active)
+         </th>
          <th>
             @Html.DisplayNameFor(model => model.Stock)
          </th>
@@ -36,7 +44,11 @@
       }
       @for (var i = 0; i < products.Length; i++) {
          @Html.HiddenFor(modelItem => products[i].ProductId)
-         <tr>
+         if (ViewBag.SelectProductId != null && ViewBag.SelectProductId == products[i].ProductId) {
+            ViewBag.SelectProductItem = products[i];
+         }
+
+         <tr @if (ViewBag.SelectProductId != null && products[i].ProductId == ViewBag.SelectProductId) { @Html.Raw("style='background-color:yellow;'")      }>
             <td>
                @Html.DisplayFor(modelItem => products[i].ProductName)
             </td>
@@ -44,17 +56,18 @@
                @Html.EditorFor(modelItem => products[i].Price)<br />
                @Html.ValidationMessageFor(modelItem => products[i].Price)
             </td>
-            @*<td>
-                   @Html.DisplayFor(modelItem => item.Active)
-               </td>*@
+            <td>
+               @Html.DisplayFor(modelItem => products[i].Active)<br />
+            </td>
             <td>
                @Html.EditorFor(modelItem => products[i].Stock)<br />
                @Html.ValidationMessageFor(modelItem => products[i].Stock)
             </td>
             <td>
                @Html.ActionLink("Edit", "Edit", new { id = products[i].ProductId }) |
-               @Html.ActionLink("Details", "Details", new { id = products[i].ProductId }) |
-               @Html.ActionLink("Delete", "Delete", new { id = products[i].ProductId })
+               @Html.ActionLink("Details", "Details", new { id = products[i].ProductId, type = "Details" }) |
+               @Html.ActionLink("Delete", "Delete", new { id = products[i].ProductId }) |
+               @Html.ActionLink("OrderLines", "Index", new { ProductId = products[i].ProductId, type = "OrderLines" })
             </td>
          </tr>
       }
@@ -63,3 +76,15 @@
 
    <button class="btn btn-primary">批次更新</button>
          }
+
+@if (ViewBag.SelectProductId != null) {
+   if (ViewBag.type == "Details") {
+
+      if (ViewData["SelectProductItem"] != null) {
+         @Html.Partial("Details", ViewData["SelectProductItem"])
+      }
+   }
+   else {
+      @Html.Action("Index", "OrderLines", new { ProductId = ViewBag.SelectProductId })
+   }
+}
