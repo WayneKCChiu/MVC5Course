@@ -1,0 +1,40 @@
+﻿
+@{
+   ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+<div ng-app="app" ng-controller="MainCtrl">
+   <button ng-click="get()">取得JSON資料</button>
+   <table class="table">
+      <tr>
+         <td>ProductId</td>
+         <td>ProductName</td>
+         <td>Stock</td>
+         <td>Price</td>
+         <td>Active</td>
+      </tr>
+      <tr ng-repeat="item in data">
+         <td>{{item.ProductId}}</td>
+         <td>{{item.ProductName}}</td>
+         <td>{{item.Stock}}</td>
+         <td>{{item.Price}}</td>
+         <td>{{item.Active}}</td>
+      </tr>
+   </table>
+</div>
+
+@section Scripts{
+   <script src="~/Scripts/angular.js"></script>
+   <script>
+      angular.module('app', []).controller('MainCtrl', function MainCtrl($http, $scope) {
+         $scope.get = function () {
+            $http.get('/AR/JsonTest').then(function (result) {
+               $scope.data = result.data;
+            });
+         };
+      });
+   </script>
+}
